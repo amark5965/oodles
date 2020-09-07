@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="ISO-8859-1">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="style.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<title>Assignment</title>
+<style>
+
+</style>
+</head>
+<body background="https://res.cloudinary.com/db2cdk9ax/image/upload/v1598766660/loginbg_gx3yh1.jpg">
+	    <div id="login">
+        <div class="container">
+            <div id="login-row" class="row justify-content-center align-items-center">
+                <div id="login-column" class="col-md-6 col-lg-5">
+                    <div id="login-box" class="col-md-12">
+                     <h1 class="center ml-3">Login</h1>
+                        <form id="login-form" class="form" action="">
+                            <div class="form-group">
+                                <label for="username" class="text-info">Email:</label><br>
+                                <input type="email" name="username" id="username" class="form-control">
+                                <label class="error" for="username" id="username_error">Email is required.</label>
+                            </div>
+                            <div class="form-group">
+                                <label for="password" class="text-info">Password:</label><br>
+                                <input type="password" name="password" id="password" class="form-control">
+                                <span class="fa fa-eye-slash password_icon" id="password_icon" onclick="togglePass('password','password_icon')"></span>
+                                <label class="error" for="password" id="password_error">Password is required.</label>
+                            </div>
+                            <div class="form-group text-center p-4">
+                                <button type="button" class="btn btn-md text-white btn-submit btn-login"  onclick="loginHandler();" >Login</button>
+                                <p class="auth_error"></p>
+                            <p class="mt-2" style="cursor:pointer"><a href="signup.html">Create an account</a></p>
+                          </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    
+    <script>
+    $( document ).ready(function() {
+    	$('.error,.auth_error').hide();
+    });
+    
+    function togglePass(id,id2){
+    	var x = document.getElementById(id);
+    	if (x.type === "password") 
+    	{
+	    	 $('#'+id2).removeClass('fa fa-eye-slash');
+	    	 $('#'+id2).addClass('fa fa-eye');
+	    	 x.type = "text";
+    	}
+    	else 
+    	{
+	    	 $('#'+id2).removeClass('fa fa-eye');
+	    	 $('#'+id2).addClass('fa fa-eye-slash');
+	    	 x.type = "password";
+    	}
+     }
+    
+    function loginHandler(){
+    	$('.error,.auth_error').hide();
+
+    	  var name = $("input#username").val().trim();
+    		if (name == "") {
+          $("label#username_error").show();
+          $("input#username").focus();
+          return false;
+        }
+    	 var password = $("input#password").val().trim();
+    		if (password == "") {
+          $("label#password_error").show();
+          $("input#password").focus();
+          return false;
+        }
+         if(IsEmail(name)==false){
+          $('.auth_error').html("Invalid Email Format");
+          $('.auth_error').show();
+          return false;
+        }
+    	// Ajax Request
+    	$(".btn-login").html("Loading...");
+   	   var username = $("input#username").val().trim();
+       var password = $("input#password").val().trim();
+   	   var dataString = 'email='+ username + '&password=' + password+'&case='+'LOGIN';
+   	   $.ajax({
+      	    type: "POST",
+      	    url: "auth.php",
+      	    data: dataString,
+      	    success: function(res) {
+      	    	if(res){
+      	    		setTimeout(function(){window.location.replace("home.html")},1000);
+      	    		//response.sendRedirect("/home");
+      	    	}
+      	    	else{
+      	    		setTimeout(function(){
+      	    			$(".btn-login").html("Login");
+                  $('.auth_error').html("Invalid Credentials");
+      	    			$('.auth_error').show();},1000);
+      	    	}
+      	    }
+      	      });
+   	   return false;
+    }
+     function IsEmail(email) {
+  var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+  if(!regex.test(email)) {
+    return false;
+  }else{
+    return true;
+  }
+}
+    </script>
+</body>
+</html>
